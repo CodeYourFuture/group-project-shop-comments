@@ -10,10 +10,13 @@
     "body-parser": "~1.18.3",
     "cookie-parser": "~1.4.4",
     "debug": "~4.1.1",
+    "dotenv": "^16.0.0",
     "express": "~4.16.4",
     "hbs": "~4.0.2",
+    "mongoose": "^6.2.4",
     "morgan": "~1.9.1",
-    "serve-favicon": "~2.5.0"
+    "serve-favicon": "~2.5.0",
+    "sql": "^0.78.0"
   },
   "devDependencies": {
     "husky": "^0.14.3",
