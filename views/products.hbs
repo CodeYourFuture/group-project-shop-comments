@@ -27,14 +27,20 @@
 							<input type="number" id="RatingInput" name="ratingInput" min="1" max="5">
                             <input id="buttonId" type="submit" name="commentInput"><br><br>
                      </form>
-					 	{{!-- {{#if this.comments}}
-					<ul>
-						{{#each comments}}
-						<li> {{this.comments}</li>
-						{{/each}}
-					</ul>
-						{{/if}} --}}
+					 </div>
+					 <div>
+					 	
+					
+						{{#if this.comments}}
+					 <div>
+						 {{#each this}}
+						 <li>{{this.prop.value}}</li>
+						 {{/each}}
 					</div>
+						{{/if}}
+					
+					
+					
 			</div>
 		</div>
 	{{/each}}
