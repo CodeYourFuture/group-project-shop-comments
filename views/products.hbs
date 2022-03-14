@@ -15,9 +15,28 @@
 				{{/if}}
 				<div class="product__buttons">
 					<button class="button button--primary">Buy</button>
-					<a href="/products/lorem" class="button">View Details</a>
+				
 				</div>
+				<div>
+				 <form action="{{this.urlPath}}" method="POST">
+						 <input type="hidden" name="_id" value="{{this._id}}">
+							<p> Add Your Comment</p>
+                             email: <input type="email"  name="email"><br><br>
+                            <textarea id="commentTextArea" name="textarea"  value="..."> </textarea><br><br>
+							<p> Rate The Product</p>
+							<input type="number" id="RatingInput" name="ratingInput" min="1" max="5">
+                            <input id="buttonId" type="submit" name="commentInput"><br><br>
+                     </form>
+					 	{{!-- {{#if this.comments}}
+					<ul>
+						{{#each comments}}
+						<li> {{this.comments}</li>
+						{{/each}}
+					</ul>
+						{{/if}} --}}
+					</div>
 			</div>
 		</div>
 	{{/each}}
 </div>
+
