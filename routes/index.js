@@ -76,7 +76,7 @@ router.get("/products/:urlPath", async (req, res, next) => {
 });
 
 // posting rating & comments
-constratingCountArr = [];
+const ratingCountArr = [];
 const commentsArr = [];
 
 router.post("/products/:urlPath", async (req, res, next) => {
@@ -89,15 +89,15 @@ router.post("/products/:urlPath", async (req, res, next) => {
     const count = productsData[0].commentCount;
     const dataComments = productsData[0].comments;
     //increase the comments by 1
+    commentsArr.push(comment);
+    const countNumber = commentsArr.length;
     myProducts
-      .findOneAndUpdate({ commentCount: count }, { commentCount: count + 1 })
+      .findOneAndUpdate({ commentCount: count }, { commentCount: countNumber })
       .then(function() {
         myProducts.findOne({ urlPath: urlPath }).then(function(x) {
-          assert(x.commentCount === count + 1);
+          assert(x.commentCount === countNumber);
         });
       });
-    //push new comment
-    commentsArr.push(comment);
     myProducts
       .findOneAndUpdate({ comments: dataComments }, { comments: commentsArr })
       .then(function() {
@@ -117,11 +117,7 @@ router.post("/products/:urlPath", async (req, res, next) => {
     ratingCountArr.push(newratingInput);
     const ratingSum = Number(ratingCountArr.reduce((a, b) => a + b, 0));
     const ratingAvrage = Math.round((ratingSum / ratingCountArr.length) * 10) / 10;
-    console.log(typeof ratingAvrage);
-    console.log(productsData[0].ratingCounter, ">>>>>>>>>>ratingcounter");
-    console.log(ratingCountArr.length);
-    console.log(ratingSum, ">>>>>>>>>>>>sum");
-    console.log(ratingAvrage);
+
     myProducts.findOneAndUpdate({ rating: rate }, { rating: ratingAvrage }).then(function() {
       myProducts.findOne({ urlPath: urlPath }).then(function(x) {
         assert(x.rating === ratingAvrage);
