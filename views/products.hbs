@@ -7,7 +7,7 @@
 				<div class="product__price">${{this.price}}</div>
 				{{#if this.rating}}
 					<div class="product__rating">
-						Rating: {{this.rating}}
+						Rating: {{this.rating}}/5
 					</div>
 				{{/if}}
 				{{#if this.commentCount}}
@@ -22,10 +22,10 @@
 						 <input type="hidden" name="_id" value="{{this._id}}">
 							<p> Add Your Comment</p>
                              email: <input type="email"  name="email"><br><br>
-                            <textarea id="commentTextArea" name="textarea"  value="..."> </textarea><br><br>
+                            <textarea id="commentTextArea" name="textarea"  > </textarea><br><br>
 							<p> Rate The Product</p>
 							<input type="number" id="RatingInput" name="ratingInput" min="1" max="5">
-                            <input id="buttonId" type="submit" name="commentInput"><br><br>
+                            <input id="buttonId" class="button" type="submit" name="commentInput"><br><br>
                      </form>
 					 </div>
 					 <div>
@@ -33,11 +33,18 @@
 					
 						{{#if this.comments}}
 					 <div>
-						 {{#each this}}
-						 <li>{{this.prop.value}}</li>
+						 All Comments
+					   {{#each comments }}
+					    
+						<li>{{ this}}</li>
 						 {{/each}}
 					</div>
 						{{/if}}
+						<div>
+							<a href="/" class="button">Home</a>
+						</div>
+
+							
 					
 					
 					

@@ -8,20 +8,62 @@ const { default: mongoose } = require("mongoose");
 const db = require("../models/db.js");
 const async = require("hbs/lib/async");
 
+const myProducts = db.products;
+
+router.get("/", async (req, res, next) => {
+  /**
+   * Define a callback function to render the
+   * homepage once the products data has been loaded
+   */
+
+  const productsData = await myProducts.find({}).exec();
+  productsData.sort((a, b) => {
+    return Number(b.rating.replace("/5", "")) - Number(a.rating.replace("/5", ""));
+  });
+
+  // apply styling to top rated product
+  productsData.forEach((product, i) => {
+    const isTopRated = productsData.isTopRated;
+    const highRated = product.isTopRated;
+    const rating = product.rating;
+    const id = product.id;
+    const urlPath = product.urlPath;
+
+    if (i === 0) {
+      myProducts.findOneAndUpdate({ _id: id }, { isTopRated: true }).then(function() {
+        myProducts.findOne({ _id: id }).then(function(x) {
+          assert(x.isTopRated === true);
+        });
+      });
+    } else {
+      myProducts.findOneAndUpdate({ _id: id }, { isTopRated: false }).then(function() {
+        myProducts.findOne({ _id: id }).then(function(x) {
+          assert(x.isTopRated === false);
+        });
+      });
+    }
+  });
+  res.render("index", {
+    title: "AcmeInc",
+    description: "We sell the finest goods and services.",
+    products: productsData
+  });
+});
+
 //the single products route
-let myProducts = db.products;
-
 router.get("/products/:urlPath", async (req, res, next) => {
-  let urlPath = req.params.urlPath;
-  let id = req.body.id;
+  const urlPath = req.params.urlPath;
+  const id = req.body.id;
 
-  let productsData = await myProducts.find({ _urlpath: urlPath }).exec();
+  // fetching all data
+  const productsData = await myProducts.find({ _urlpath: urlPath }).exec();
 
+  // filtering the single product data.
   const result = productsData.filter((product) => {
     return product.urlPath === urlPath;
   });
-  console.log(result[0].commentCount, ">>>>>>>>>>>>>comment count");
 
+  //render the single product
   if (productsData) {
     res.render("products", {
       title: "AcmeInc",
@@ -33,99 +75,68 @@ router.get("/products/:urlPath", async (req, res, next) => {
   }
 });
 
-let ratingCountArr = [];
+// posting rating & comments
+constratingCountArr = [];
+const commentsArr = [];
 
 router.post("/products/:urlPath", async (req, res, next) => {
-  let id = req.body._id;
-  let urlPath = req.params.urlPath;
-
-  let comment = req.body.textarea;
-  let newratingInput = +req.body.ratingInput;
-
-  let productsData = await myProducts.find({ _id: id }).exec();
-  console.log(productsData, ">>>>>...productsData");
-
-  console.log(productsData[0].ratingCounter, ">>>>>>>>>>ratingcounter");
-  ratingCountArr.push(newratingInput);
-  console.log(ratingCountArr.length);
-  let ratingSum = Number(ratingCountArr.reduce((a, b) => a + b, 0));
-  console.log(ratingSum, ">>>>>>>>>>>>sum");
-  let ratingAvrage = Math.round((ratingSum / ratingCountArr.length) * 10) / 10;
-  console.log(ratingAvrage);
-
-  let count = productsData[0].commentCount;
-  let rating = productsData[0].rating;
-  let ratingString = `${ratingAvrage}/5`;
-  console.log(ratingString, ">>>>>>>>>ratingString");
-  if (comment.length > 0 || comment != " ") {
+  const id = req.body._id;
+  const urlPath = req.params.urlPath;
+  const productsData = await myProducts.find({ _id: id }).exec();
+  //comment functionality
+  function postComment() {
+    const comment = req.body.textarea;
+    const count = productsData[0].commentCount;
+    const dataComments = productsData[0].comments;
+    //increase the comments by 1
     myProducts
       .findOneAndUpdate({ commentCount: count }, { commentCount: count + 1 })
       .then(function() {
         myProducts.findOne({ urlPath: urlPath }).then(function(x) {
           assert(x.commentCount === count + 1);
-          increase = +1;
+        });
+      });
+    //push new comment
+    commentsArr.push(comment);
+    myProducts
+      .findOneAndUpdate({ comments: dataComments }, { comments: commentsArr })
+      .then(function() {
+        myProducts.findOne({ urlPath: urlPath }).then(function(x) {
+          assert(x.comments === commentsArr);
+          console.log(commentsArr, "commentsArr");
         });
       });
   }
-  myProducts.findOneAndUpdate({ rating: rating }, { rating: ratingString }).then(function() {
-    myProducts.findOne({ urlPath: urlPath }).then(function(x) {
-      assert(x.rating === ratingString);
-    });
-  });
+  postComment();
 
-  res.render("products", {
-    title: "AcmeInc",
-    description: "We sell the finest goods and services.",
-    products: productsData,
-    comments: productsData.comments
-  });
-});
-
-/* GET home page. */
-router.get("/", async (req, res, next) => {
-  /**
-   * Define a callback function to render the
-   * homepage once the products data has been loaded
-   */
-
-  let productsData = await myProducts.find({}).exec();
-  console.log(productsData, ">>>>>>>>>>>>>>all data");
-
-  let allData = [...productsData];
-
-  productsData.sort((a, b) => {
-    return Number(b.rating.replace("/5", "")) - Number(a.rating.replace("/5", ""));
-  });
-  console.log(productsData, ">>>>>>>>>.. sortedData");
-  productsData.forEach((product, i) => {
-    let highRated = product.isTopRated;
-    let rating = product.rating;
-    let id = product._id;
-    let urlPath = product.urlPath;
-    console.log(id, ">>>>>>>>>>>>>id");
-
-    if (i === 0 && rating != null) {
-      myProducts.findOneAndUpdate({ isTopRated: highRated }, { isTopRated: true }).then(function() {
-        myProducts.findOne({ _id: id }).then(function(x) {
-          assert(x.isTopRated === true);
-        });
+  //rating functionality
+  function postRating() {
+    const newratingInput = +req.body.ratingInput;
+    const rate = productsData[0].rating;
+    console.log(rate, "rating");
+    ratingCountArr.push(newratingInput);
+    const ratingSum = Number(ratingCountArr.reduce((a, b) => a + b, 0));
+    const ratingAvrage = Math.round((ratingSum / ratingCountArr.length) * 10) / 10;
+    console.log(typeof ratingAvrage);
+    console.log(productsData[0].ratingCounter, ">>>>>>>>>>ratingcounter");
+    console.log(ratingCountArr.length);
+    console.log(ratingSum, ">>>>>>>>>>>>sum");
+    console.log(ratingAvrage);
+    myProducts.findOneAndUpdate({ rating: rate }, { rating: ratingAvrage }).then(function() {
+      myProducts.findOne({ urlPath: urlPath }).then(function(x) {
+        assert(x.rating === ratingAvrage);
       });
-    } else {
-      myProducts
-        .findOneAndUpdate({ isTopRated: highRated }, { isTopRated: false })
-        .then(function() {
-          myProducts.findOne({ _id: id }).then(function(x) {
-            assert(x.isTopRated === false);
-          });
-        });
-    }
-  });
+    });
+  }
 
-  res.render("index", {
+  postRating();
+  res.render("products", {
     title: "AcmeInc",
     description: "We sell the finest goods and services.",
     products: productsData
   });
 });
+
+/* GET home page. */
 
 module.exports = router;
