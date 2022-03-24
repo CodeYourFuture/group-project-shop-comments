@@ -83,6 +83,7 @@ router.post("/products/:urlPath", async (req, res, next) => {
   const id = req.body._id;
   const urlPath = req.params.urlPath;
   const productsData = await myProducts.find({ _id: id }).exec();
+  // console.log(productsData,">>>>>>>>>>>>>>selected data");
   //comment functionality
   function postComment() {
     const comment = req.body.textarea;
@@ -92,7 +93,7 @@ router.post("/products/:urlPath", async (req, res, next) => {
     commentsArr.push(comment);
     const countNumber = commentsArr.length;
     myProducts
-      .findOneAndUpdate({ commentCount: count }, { commentCount: countNumber })
+      .findOneAndUpdate({ urlPath: urlPath }, { commentCount: countNumber })
       .then(function() {
         myProducts.findOne({ urlPath: urlPath }).then(function(x) {
           assert(x.commentCount === countNumber);
