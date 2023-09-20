@@ -60,6 +60,6 @@ status = 200
     certFile = "cert.pem"
     keyFile = "key.pem"
  [build]
-  command = "npm start"
+  command = "node ./bin/www"
   publish = "build"
   # functions = "functions"
