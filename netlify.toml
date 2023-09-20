@@ -59,7 +59,7 @@ status = 200
   [dev.https]
     certFile = "cert.pem"
     keyFile = "key.pem"
- [[build]]
+ [build]
   command = "npm run build"
   publish = "build"
   # functions = "functions"
