@@ -60,6 +60,6 @@ status = 200
     certFile = "cert.pem"
     keyFile = "key.pem"
  [build]
-  command = "npm run build"
+  command = "npm start"
   publish = "build"
   # functions = "functions"
