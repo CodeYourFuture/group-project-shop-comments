@@ -1,4 +1,5 @@
 const express = require("express");
+import { stream } from "@netlify/functions";
 const path = require("path");
 const favicon = require("serve-favicon");
 const logger = require("morgan");
