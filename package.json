@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "precommit": "pretty-quick --staged --verbose",
-    "start": "npm run build"
+    "start": "node ./bin/www"
   },
   "dependencies": {
     "body-parser": "~1.18.3",
