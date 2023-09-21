@@ -8,8 +8,7 @@ const bodyParser = require("body-parser");
 const index = require("./routes/index");
 const products = require("./routes/products");
 const mongoose = require("mongoose");
-const dotenv = require("dotenv");
-dotenv.config();
+require("dotenv/config");
 const app = express();
 
 // view engine setup
