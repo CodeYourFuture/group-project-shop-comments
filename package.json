@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "precommit": "pretty-quick --staged --verbose",
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "postinstall": "ng build"
   },
   "dependencies": {
     "body-parser": "~1.18.3",
