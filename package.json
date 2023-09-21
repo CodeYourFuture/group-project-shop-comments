@@ -21,6 +21,7 @@
     "sql": "^0.78.0"
   },
   "devDependencies": {
+    "@angular/cli": "^16.2.3",
     "@types/async": "^3.2.20",
     "@types/hbs": "^4.0.1",
     "husky": "^0.14.3",
