@@ -4,8 +4,9 @@
   "private": true,
   "scripts": {
     "precommit": "pretty-quick --staged --verbose",
-    "start": "node ./bin/www",
-    "postinstall": "ng build"
+    "start": "npm start",
+    "build": "node ./bin/www",
+    "heroku-postbuild": "npm run build"
   },
   "dependencies": {
     "body-parser": "~1.18.3",
