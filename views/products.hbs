@@ -1,0 +1,55 @@
+<div class="products">
+	{{#each products}}
+		<div class="product{{#if this.isTopRated}} product--top{{/if}}">
+			<div class="product__thumbnail product__thumbnail--{{this.urlPath}}"></div>
+			<div class="product__details">
+				<h2 class="product__title">{{this.title}}</h2>
+				<div class="product__price">${{this.price}}</div>
+				{{#if this.rating}}
+					<div class="product__rating">
+						Rating: {{this.rating}}/5
+					</div>
+				{{/if}}
+				{{#if this.commentCount}}
+					<a href="/products/{{this.urlPath}}" class="product__reviews">{{this.commentCount}} comments</a>
+				{{/if}}
+				<div class="product__buttons">
+					<button class="button button--primary">Buy</button>
+				
+				</div>
+				<div>
+				 <form action="{{this.urlPath}}" method="POST">
+						 <input type="hidden" name="_id" value="{{this._id}}">
+							<p> Add Your Comment</p>
+                             email: <input type="email"  name="email"><br><br>
+                            <textarea id="commentTextArea" name="textarea"  > </textarea><br><br>
+							<p> Rate The Product</p>
+							<input type="number" id="RatingInput" name="ratingInput" min="1" max="5">
+                            <input id="buttonId" class="button" type="submit" name="commentInput"><br><br>
+                     </form>
+					 </div>
+					 <div>
+					 	
+					
+						{{#if this.comments}}
+					 <div>
+						 All Comments
+					   {{#each comments }}
+					    
+						<li>{{ this}}</li>
+						 {{/each}}
+					</div>
+						{{/if}}
+						<div>
+							<a href="/" class="button">Home</a>
+						</div>
+
+							
+					
+					
+					
+			</div>
+		</div>
+	{{/each}}
+</div>
+

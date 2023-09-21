@@ -6,7 +6,9 @@ const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 
 const index = require("./routes/index");
-
+const products = require("./routes/products");
+const mongoose = require("mongoose");
+require("dotenv/config");
 const app = express();
 
 // view engine setup
@@ -22,6 +24,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", index);
+app.use("/products", products);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -41,4 +44,12 @@ app.use(function(err, req, res, next) {
   res.render("error");
 });
 
+mongoose
+  .connect(process.env.DB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => {
+    console.log("dataBase is connected");
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 module.exports = app;
